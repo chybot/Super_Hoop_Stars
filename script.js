@@ -1,7 +1,11 @@
 document.addEventListener('DOMContentLoaded', function() {
     const menuToggle = document.querySelector('.menu-toggle');
     const navMenu = document.querySelector('nav ul');
-
+    const gameIframe = document.querySelector('.game-container iframe');
+    const loadingOverlay = document.querySelector('.loading-overlay');
+    const progressBar = document.querySelector('.progress-bar');
+    const progressText = document.querySelector('.loading-text span');
+    
     menuToggle.addEventListener('click', function() {
         navMenu.classList.toggle('active');
     });
@@ -11,6 +15,34 @@ document.addEventListener('DOMContentLoaded', function() {
         link.addEventListener('click', () => {
             navMenu.classList.remove('active');
         });
+    });
+
+    // 模拟加载进度
+    let progress = 0;
+    const loadingInterval = setInterval(() => {
+        progress += Math.random() * 30;
+        if (progress > 100) progress = 100;
+        
+        progressBar.style.width = `${progress}%`;
+        progressText.textContent = `${Math.round(progress)}%`;
+        
+        if (progress === 100) {
+            clearInterval(loadingInterval);
+            setTimeout(() => {
+                loadingOverlay.classList.add('fade-out');
+            }, 500);
+        }
+    }, 500);
+
+    // 监听iframe加载完成
+    gameIframe.addEventListener('load', function() {
+        progress = 100;
+        progressBar.style.width = '100%';
+        progressText.textContent = '100%';
+        clearInterval(loadingInterval);
+        setTimeout(() => {
+            loadingOverlay.classList.add('fade-out');
+        }, 500);
     });
 });
 
